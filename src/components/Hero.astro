@@ -1,0 +1,55 @@
+---
+const {title, subtitle, image} = Astro.props;
+---
+
+<body>
+    <div class="container">
+        <img src={image} alt="Profile Image"/>
+        <div class="text">
+            <h1>{title}</h1>
+            <h2>{subtitle}</p>
+        </div>
+    </div>
+</body>
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 40px;
+        border-radius: 10px;
+    }
+
+    img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .text h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        color: #333;
+    }
+
+    .text h2 {
+        margin: 5px 0 0 0;
+        font-size: 1.5rem;
+        color: #666;
+    }
+</style>
