@@ -1,1 +1,103 @@
 @import "tailwindcss";
+
+:root {
+	--vhs-bg: #0a0a0a;
+	--vhs-dark: #050505;
+	--vhs-cream: #f2e8d5;
+	--vhs-warm: #e0c28b;
+	--vhs-accent: #c7ff6b;
+	--vhs-shadow: rgba(0, 0, 0, 0.55);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "VT323", "Courier New", monospace;
+	background: radial-gradient(circle at 50% 10%, #1b1b1b 0%, var(--vhs-bg) 55%);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	color: var(--vhs-cream);
+	min-height: 100vh;
+	text-rendering: optimizeLegibility;
+	overflow-x: hidden;
+}
+
+body::before,
+body::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9999;
+}
+
+body::before {
+	background:
+		repeating-linear-gradient(
+			to bottom,
+			rgba(255, 255, 255, 0.04) 0px,
+			rgba(255, 255, 255, 0.04) 1px,
+			transparent 2px,
+			transparent 4px
+		),
+		radial-gradient(circle at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.5) 100%);
+	mix-blend-mode: screen;
+}
+
+body::after {
+	background:
+		linear-gradient(
+			120deg,
+			rgba(255, 247, 215, 0.06) 0%,
+			rgba(199, 255, 107, 0.05) 50%,
+			rgba(255, 215, 135, 0.08) 100%
+		),
+		repeating-linear-gradient(
+			90deg,
+			rgba(255, 0, 0, 0.02) 0px,
+			rgba(255, 0, 0, 0.02) 1px,
+			transparent 2px,
+			transparent 3px
+		);
+	opacity: 0.9;
+}
+
+::selection {
+	background: var(--vhs-accent);
+	color: #000;
+}
+
+a {
+	color: var(--vhs-accent);
+}
+
+h1, h2, h3 {
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.vhs-title {
+	color: var(--vhs-warm);
+	text-shadow: 0 1px 0 #000, 0 0 12px rgba(255, 224, 170, 0.6);
+}
+
+.vhs-card {
+	background: rgba(15, 15, 15, 0.9);
+	border: 2px solid rgba(255, 236, 200, 0.25);
+	box-shadow: 0 10px 30px var(--vhs-shadow), inset 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.vhs-glow {
+	box-shadow: 0 0 18px rgba(199, 255, 107, 0.35);
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+}

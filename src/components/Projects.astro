@@ -1,0 +1,173 @@
+---
+import type { MarkdownInstance } from 'astro';
+
+interface Props {
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+const projects = await Astro.glob('../content/projects/*.md');
+const sortedProjects: MarkdownInstance<Record<string, any>>[] = projects
+  .sort((a, b) => {
+    const aDate = a.frontmatter?.date ? new Date(a.frontmatter.date as string) : null;
+    const bDate = b.frontmatter?.date ? new Date(b.frontmatter.date as string) : null;
+    if (!aDate || !bDate) return 0;
+    return bDate.getTime() - aDate.getTime();
+  })
+  .slice(0, limit);
+---
+
+<section class="projects">
+  <div class="projects-grid">
+    {
+      sortedProjects.map((project) => (
+        <article class="project-card vhs-card">
+          {project.frontmatter.image && (
+            <div class="project-image">
+              <img src={project.frontmatter.image} alt={project.frontmatter.title} />
+            </div>
+          )}
+          <div class="project-content">
+            <h3>{project.frontmatter.title}</h3>
+            <p class="description">{project.frontmatter.description}</p>
+            
+            {project.frontmatter.tags && (
+              <div class="tags">
+                {project.frontmatter.tags.map((tag: string) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+            
+            <div class="project-links">
+              {project.frontmatter.link && (
+                <a href={project.frontmatter.link} class="btn btn-primary">Ver Proyecto</a>
+              )}
+              {project.frontmatter.github && (
+                <a href={project.frontmatter.github} class="btn btn-secondary">GitHub</a>
+              )}
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .projects {
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid rgba(255, 236, 200, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 18px rgba(199, 255, 107, 0.25);
+    transform: translateY(-5px);
+  }
+
+  .project-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1f1f1f 0%, #0c0c0c 100%);
+  }
+
+  .project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-content {
+    padding: 1.5rem;
+    background: #0f0f0f;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-content h3 {
+    margin: 0 0 0.5rem 0;
+    color: #f2e8d5;
+    text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 224, 170, 0.4);
+    font-size: 1.25rem;
+  }
+
+  .description {
+    color: #e0c28b;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(199, 255, 107, 0.15);
+    border: 1px solid rgba(199, 255, 107, 0.6);
+    color: #c7ff6b;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .project-links {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background: #e0c28b;
+    color: #0a0a0a;
+    box-shadow: 0 0 10px rgba(224, 194, 139, 0.6);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(224, 194, 139, 0.9);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: #c7ff6b;
+    border: 1px solid rgba(199, 255, 107, 0.6);
+    box-shadow: 0 0 10px rgba(199, 255, 107, 0.25);
+  }
+
+  .btn-secondary:hover {
+    box-shadow: 0 0 20px rgba(199, 255, 107, 0.6);
+  }
+</style>

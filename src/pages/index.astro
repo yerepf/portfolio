@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import Projects from '../components/Projects.astro';
 ---
 
 <Layout>
@@ -9,4 +10,27 @@ import Hero from '../components/Hero.astro';
   title="Yeremy Pujols" 
   subtitle="I'm a fullstack developer!"
   />
+  
+  <main class="container">
+    <section class="projects-section">
+      <h2>Mis Proyectos</h2>
+      <Projects />
+    </section>
+  </main>
 </Layout>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .projects-section h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #ff00ff;
+    text-shadow: 0 0 20px #ff00ff;
+    font-size: 2rem;
+  }
+</style>
