@@ -81,6 +81,19 @@ const sortedProjects: MarkdownInstance<Record<string, any>>[] = projects
     gap: 2rem;
   }
 
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .projects-grid {
+      gap: 1rem;
+    }
+  }
+
   .project-card {
     display: flex;
     flex-direction: column;
