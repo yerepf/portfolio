@@ -1,13 +1,42 @@
 ---
 import '../styles/global.css';
+
+const siteTitle = 'Yeremy Pujols | Fullstack Developer Portfolio';
+const siteDescription = 'Portafolio de Yeremy Pujols: desarrollo aplicaciones web modernas, rápidas y escalables con enfoque en experiencia de usuario y resultados de negocio.';
+const siteUrl = Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).toString()
+    : Astro.url.href;
+const siteImage = '/profile.png';
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio</title>
+    <title>{siteTitle}</title>
+    <meta name="description" content={siteDescription}>
+    <meta name="author" content="Yeremy Pujols">
+    <meta name="keywords" content="Yeremy Pujols, fullstack developer, portfolio, desarrollo web, Astro, JavaScript, TypeScript, frontend, backend">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b0f19">
+
+    <link rel="icon" type="image/png" href={siteImage}>
+    <link rel="apple-touch-icon" href={siteImage}>
+    <link rel="canonical" href={siteUrl}>
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_DO">
+    <meta property="og:title" content={siteTitle}>
+    <meta property="og:description" content={siteDescription}>
+    <meta property="og:url" content={siteUrl}>
+    <meta property="og:image" content={siteImage}>
+    <meta property="og:site_name" content="Yeremy Pujols Portfolio">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={siteTitle}>
+    <meta name="twitter:description" content={siteDescription}>
+    <meta name="twitter:image" content={siteImage}>
 </head>
 <body>
     <slot />
