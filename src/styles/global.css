@@ -101,3 +101,52 @@ h1, h2, h3 {
 	margin: 0 auto;
 	padding: 2rem;
 }
+
+.floating-linktree {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 1.25rem;
+	z-index: 10000;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	padding: 0.65rem 1rem;
+	border: 2px solid rgba(255, 236, 200, 0.35);
+	border-radius: 999px;
+	background: rgba(5, 5, 5, 0.9);
+	color: var(--vhs-accent);
+	text-decoration: none;
+	font-size: 1.4rem;
+	line-height: 1;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	box-shadow: 0 8px 24px var(--vhs-shadow), 0 0 14px rgba(199, 255, 107, 0.25);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-linktree__icon {
+	width: 1.1em;
+	height: 1.1em;
+	fill: currentColor;
+	flex-shrink: 0;
+}
+
+.floating-linktree:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 28px var(--vhs-shadow), 0 0 18px rgba(199, 255, 107, 0.4);
+}
+
+.floating-linktree:focus-visible {
+	outline: 2px solid var(--vhs-accent);
+	outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+	.floating-linktree {
+		right: 1rem;
+		bottom: 1rem;
+		padding: 0.6rem 0.95rem;
+		font-size: 1.2rem;
+	}
+}
