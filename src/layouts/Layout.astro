@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
 
 const siteTitle = 'Yeremy Pujols | Fullstack Developer Portfolio';
 const siteDescription = 'Portafolio de Yeremy Pujols: desarrollo aplicaciones web modernas, rápidas y escalables con enfoque en experiencia de usuario y resultados de negocio.';
@@ -39,6 +40,7 @@ const siteImage = '/profile.png';
     <meta name="twitter:image" content={siteImage}>
 </head>
 <body>
+    <Navbar />
     <slot />
     <a
         class="floating-linktree"

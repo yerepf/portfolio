@@ -1,0 +1,319 @@
+---
+import type { MarkdownInstance } from 'astro';
+
+interface Props {
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+const certifications = await Astro.glob('../content/certifications/*.md');
+
+const getIconUrl = (techName: string) => {
+  const iconName = techName.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '');
+  return `https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/${iconName}.svg`;
+};
+
+const sortedCertifications: MarkdownInstance<Record<string, any>>[] = certifications
+  .sort((a, b) => {
+    const aDate = a.frontmatter?.date ? new Date(a.frontmatter.date as string) : null;
+    const bDate = b.frontmatter?.date ? new Date(b.frontmatter.date as string) : null;
+    if (!aDate || !bDate) return 0;
+    return bDate.getTime() - aDate.getTime();
+  })
+  .slice(0, limit);
+---
+
+<section class="certifications">
+  <div class="certifications-grid">
+    {
+      sortedCertifications.map((cert, index) => (
+        <article 
+          class="certification-card vhs-card" 
+          data-cert-index={index}
+          data-image={cert.frontmatter.image || ''}
+          data-link={cert.frontmatter.link || ''}
+        >
+          {cert.frontmatter.image && (
+            <div class="certification-image">
+              <img src={cert.frontmatter.image} alt={cert.frontmatter.title} />
+            </div>
+          )}
+          <div class="certification-content">
+            <h3>{cert.frontmatter.title}</h3>
+            <p class="issuer">{cert.frontmatter.issuer}</p>
+            {cert.frontmatter.description && (
+              <p class="description">{cert.frontmatter.description}</p>
+            )}
+            {cert.frontmatter.credentialId && (
+              <p class="credential-id">ID: {cert.frontmatter.credentialId}</p>
+            )}
+            {cert.frontmatter.tags && (
+              <div class="tags">
+                {cert.frontmatter.tags.map((tag: string) => (
+                  <span class="tag">
+                    <img 
+                      src={getIconUrl(tag)} 
+                      alt={tag} 
+                      class="tag-logo"
+                      onerror="this.style.display='none'"
+                    />
+                    <span class="tag-name">{tag}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<div id="cert-modal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" aria-label="Cerrar">&times;</button>
+    <img id="modal-image" src="" alt="Certificación" />
+    <a id="modal-link" href="" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Ver Credencial</a>
+  </div>
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.certification-card');
+  const modal = document.getElementById('cert-modal');
+  const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+  const modalLink = document.getElementById('modal-link') as HTMLAnchorElement;
+  const modalClose = document.querySelector('.modal-close');
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const image = card.getAttribute('data-image');
+      const link = card.getAttribute('data-link');
+
+      if (image) {
+        modalImage.src = image;
+        modalImage.style.display = 'block';
+      } else {
+        modalImage.style.display = 'none';
+      }
+
+      if (link) {
+        modalLink.href = link;
+        modalLink.style.display = 'inline-block';
+      } else {
+        modalLink.style.display = 'none';
+      }
+
+      modal?.classList.add('active');
+    });
+  });
+
+  modalClose?.addEventListener('click', () => {
+    modal?.classList.remove('active');
+  });
+
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+      modal.classList.remove('active');
+    }
+  });
+</script>
+
+<style>
+  .certifications {
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .certifications-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .certifications-grid {
+      gap: 1rem;
+    }
+  }
+
+  .certification-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid rgba(255, 236, 200, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .certification-card:hover {
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 18px rgba(199, 255, 107, 0.25);
+    transform: translateY(-3px);
+  }
+
+  .certification-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1f1f1f 0%, #0c0c0c 100%);
+  }
+
+  .certification-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .certification-content {
+    padding: 1.25rem;
+    background: #0f0f0f;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .certification-content h3 {
+    margin: 0 0 0.25rem 0;
+    color: #f2e8d5;
+    text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 224, 170, 0.4);
+    font-size: 1.15rem;
+  }
+
+  .issuer {
+    color: #c7ff6b;
+    font-size: 0.85rem;
+    margin: 0 0 0.75rem 0;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .description {
+    color: #e0c28b;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    flex: 1;
+  }
+
+  .credential-id {
+    color: #888;
+    font-size: 0.75rem;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(199, 255, 107, 0.15);
+    border: 1px solid rgba(199, 255, 107, 0.6);
+    color: #c7ff6b;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    border-radius: 4px;
+  }
+
+  .tag-logo {
+    width: 0.9rem;
+    height: 0.9rem;
+    display: inline-block;
+  }
+
+  .tag-name {
+    font-weight: 500;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #f2e8d5;
+    font-size: 2.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .modal-close:hover {
+    color: #c7ff6b;
+  }
+
+  #modal-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border: 2px solid rgba(255, 236, 200, 0.25);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background: #e0c28b;
+    color: #0a0a0a;
+    box-shadow: 0 0 15px rgba(224, 194, 139, 0.6);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 25px rgba(224, 194, 139, 0.9);
+  }
+</style>

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Projects from '../components/Projects.astro';
+import Certifications from '../components/Certifications.astro';
 ---
 
 <Layout>
@@ -13,9 +14,13 @@ import Projects from '../components/Projects.astro';
     />
     
     <main class="container">
-      <section class="projects-section">
+      <section id="projects" class="projects-section">
         <h2>Mis Proyectos</h2>
         <Projects />
+      </section>
+      <section id="certifications" class="certifications-section">
+        <h2>Certificaciones</h2>
+        <Certifications />
       </section>
     </main>
   </div>
@@ -57,12 +62,32 @@ import Projects from '../components/Projects.astro';
     overflow-wrap: break-word;
   }
 
+  .certifications-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 236, 200, 0.15);
+  }
+
+  .certifications-section h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #e0c28b;
+    text-shadow: 0 0 20px #e0c28b;
+    font-size: 2rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
   @media (max-width: 768px) {
     .container {
       padding: 1.5rem;
     }
 
     .projects-section h2 {
+      font-size: 1.5rem;
+    }
+
+    .certifications-section h2 {
       font-size: 1.5rem;
     }
   }
@@ -76,6 +101,10 @@ import Projects from '../components/Projects.astro';
     .projects-section h2 {
       font-size: 1.25rem;
       margin-bottom: 1.5rem;
+    }
+
+    .certifications-section h2 {
+      font-size: 1.25rem;
     }
   }
 </style>

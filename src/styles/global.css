@@ -15,7 +15,7 @@
 
 body {
 	margin: 0;
-	padding: 0;
+	padding-top: 60px;
 	font-family: "VT323", "Courier New", monospace;
 	background: radial-gradient(circle at 50% 10%, #1b1b1b 0%, var(--vhs-bg) 55%);
 	background-repeat: no-repeat;
