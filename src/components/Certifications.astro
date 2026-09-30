@@ -35,7 +35,12 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
         >
           {cert.data.image && (
             <div class="certification-image">
-              <img src={cert.data.image} alt={getLocalizedText(cert.data.title, locale)} />
+              <img
+                src={cert.data.image}
+                alt={getLocalizedText(cert.data.title, locale)}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           )}
           <div class="certification-content">
@@ -55,6 +60,8 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
                       src={getTechIconUrl(tag)} 
                       alt={tag} 
                       class="tag-logo"
+                      loading="lazy"
+                      decoding="async"
                       onerror="this.style.display='none'"
                     />
                     <span class="tag-name">{tag}</span>

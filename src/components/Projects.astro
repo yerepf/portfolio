@@ -52,7 +52,12 @@ const sortedProjects: CollectionEntry<'projects'>[] = projects
         <article class="project-card vhs-card">
           {project.data.image && (
             <div class="project-image">
-              <img src={project.data.image} alt={getLocalizedText(project.data.title, locale)} />
+              <img
+                src={project.data.image}
+                alt={getLocalizedText(project.data.title, locale)}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           )}
           <div class="project-content">
@@ -67,6 +72,8 @@ const sortedProjects: CollectionEntry<'projects'>[] = projects
                       src={getTechIconUrl(tag)} 
                       alt={tag} 
                       class="tag-logo"
+                      loading="lazy"
+                      decoding="async"
                       onerror="this.style.display='none'"
                     />
                     <span class="tag-name">{tag}</span>
