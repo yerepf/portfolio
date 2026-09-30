@@ -166,15 +166,18 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
 
   .certification-image {
     width: 100%;
-    height: 160px;
+    min-height: 160px;
+    max-height: 420px;
     overflow: hidden;
     background: linear-gradient(135deg, #1f1f1f 0%, #0c0c0c 100%);
   }
 
   .certification-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    display: block;
   }
 
   .certification-content {
