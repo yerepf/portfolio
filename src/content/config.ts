@@ -61,6 +61,13 @@ const blog = defineCollection({
     draft: z.boolean().default(false),
     author: z.string().default('Yeremy Pujols'),
     readingTime: z.number().optional(),
+    shortId: z
+      .string()
+      .regex(
+        /^[a-z0-9](?:[a-z0-9-]{0,18}[a-z0-9])?$/,
+        'shortId debe ser minusculas, sin espacios, 1-20 caracteres (ej: crash)'
+      )
+      .optional(),
   }),
 });
 

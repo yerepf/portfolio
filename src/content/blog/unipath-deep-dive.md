@@ -154,6 +154,7 @@ tags: ["React", "TypeScript", "Supabase", "PostgreSQL", "Gemini API", "AI", "EdT
 category: "project-deep-dive"
 relatedProjects: ["unipath"]
 date: 2026-04-15
+shortId: "unipath"
 author: "Yeremy Pujols"
 readingTime: 12
 ---

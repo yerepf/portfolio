@@ -156,6 +156,7 @@ tags: ["React", "TypeScript", "CesiumJS", "Three.js", "FastAPI", "Python", "NASA
 category: "project-deep-dive"
 relatedProjects: ["crash"]
 date: 2025-10-10
+shortId: "crash"
 author: "Yeremy Pujols"
 readingTime: 10
 ---
