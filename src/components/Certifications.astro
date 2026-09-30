@@ -56,7 +56,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
               <div class="tags">
                 {cert.data.tags.map((tag) => (
                   <span class="tag">
-                    <TechIcon tag={tag} class="tag-logo" />
+                    <TechIcon tag={tag} />
                     <span class="tag-name">{tag}</span>
                   </span>
                 ))}
@@ -231,14 +231,6 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     font-size: 0.7rem;
     text-transform: uppercase;
     border-radius: 4px;
-  }
-
-  .tag-logo {
-    width: 0.9rem;
-    height: 0.9rem;
-    display: inline-block;
-    fill: currentColor;
-    flex-shrink: 0;
   }
 
   .tag-name {

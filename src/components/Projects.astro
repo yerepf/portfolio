@@ -68,7 +68,7 @@ const sortedProjects: CollectionEntry<'projects'>[] = projects
               <div class="tags">
                 {project.data.tags.map((tag) => (
                   <span class="tag">
-                    <TechIcon tag={tag} class="tag-logo" />
+                    <TechIcon tag={tag} />
                     <span class="tag-name">{tag}</span>
                   </span>
                 ))}
@@ -199,14 +199,6 @@ const sortedProjects: CollectionEntry<'projects'>[] = projects
     font-size: 0.75rem;
     text-transform: uppercase;
     border-radius: 4px;
-  }
-
-  .tag-logo {
-    width: 1rem;
-    height: 1rem;
-    display: inline-block;
-    fill: currentColor;
-    flex-shrink: 0;
   }
 
   .tag-name {

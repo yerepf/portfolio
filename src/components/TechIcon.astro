@@ -12,8 +12,24 @@ const iconId = getTechIconId(tag);
 
 {
   iconId && (
-    <svg class={className} aria-hidden="true" focusable="false">
+    <svg
+      class:list={['tech-icon', className]}
+      width="16"
+      height="16"
+      aria-hidden="true"
+      focusable="false"
+    >
       <use href={`/icons.svg#${iconId}`} />
     </svg>
   )
 }
+
+<style>
+  .tech-icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+</style>
