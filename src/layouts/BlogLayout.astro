@@ -1,0 +1,259 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import BlogList from '../components/BlogList.astro';
+import BlogSearch from '../components/BlogSearch.astro';
+import { getCategoryLabel } from '../i18n';
+import type { BlogPostWithSlug } from '../utils/blog';
+import { getTranslationSync, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  posts: BlogPostWithSlug[];
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+  categories: string[];
+}
+
+const { locale, posts, currentPage, totalPages, basePath, categories } = Astro.props;
+const t = getTranslationSync(locale);
+---
+
+<BaseLayout locale={locale}>
+  <div class="blog-page">
+    <header class="blog-page__header">
+      <h1 class="blog-page__title">{t.blog.title}</h1>
+      <p class="blog-page__subtitle">{t.blog.subtitle}</p>
+    </header>
+
+    <div class="blog-page__toolbar">
+      <BlogSearch locale={locale} />
+    </div>
+
+    {categories.length > 0 && (
+      <nav class="blog-categories" aria-label={t.blog.categories}>
+        <button type="button" class="blog-categories__chip is-active" data-category="" aria-pressed="true">
+          {t.blog.allCategories}
+        </button>
+        {categories.map((cat) => (
+          <button type="button" class="blog-categories__chip" data-category={cat} aria-pressed="false">
+            {getCategoryLabel(cat, locale)}
+          </button>
+        ))}
+      </nav>
+    )}
+
+    <main class="blog-page__main">
+      <BlogList
+        posts={posts}
+        locale={locale}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        basePath={basePath}
+      />
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .blog-page__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .blog-page__title {
+    margin: 0 0 0.5rem 0;
+    color: #f2e8d5;
+    font-size: 2.5rem;
+    text-shadow: 0 1px 0 #000, 0 0 20px rgba(255, 224, 170, 0.4);
+  }
+
+  .blog-page__subtitle {
+    margin: 0;
+    color: #e0c28b;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .blog-page__toolbar {
+    margin-bottom: 1.25rem;
+  }
+
+  .blog-categories {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 236, 200, 0.15);
+  }
+
+  .blog-categories__chip {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(199, 255, 107, 0.35);
+    border-radius: 999px;
+    background: transparent;
+    color: #e0c28b;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .blog-categories__chip:hover {
+    color: #c7ff6b;
+    border-color: #c7ff6b;
+    background: rgba(199, 255, 107, 0.1);
+  }
+
+  .blog-categories__chip.is-active {
+    color: #c7ff6b;
+    background: rgba(199, 255, 107, 0.15);
+    border-color: #c7ff6b;
+  }
+
+  .blog-page__main {
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .blog-page {
+      padding: 2rem 1rem;
+    }
+
+    .blog-page__title {
+      font-size: 2rem;
+    }
+
+    .blog-categories {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+    }
+
+    .blog-categories::-webkit-scrollbar {
+      display: none;
+    }
+  }
+</style>
+
+<style is:global>
+  .blog-filter__empty {
+    grid-column: 1 / -1;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #e0c28b;
+    font-size: 1.1rem;
+  }
+
+  /* .blog-card sets display: flex, which would override the UA [hidden] rule */
+  .blog-card[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  const input = document.getElementById('blog-search-input') as HTMLInputElement | null;
+  const clearBtn = document.querySelector<HTMLButtonElement>('[data-search-clear]');
+  const status = document.getElementById('blog-search-status');
+  const chips = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.blog-categories__chip')
+  );
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.blog-card'));
+  const pagination = document.querySelector<HTMLElement>('.blog-list__pagination');
+  const resultsLabel = status?.dataset.label ?? '';
+  const noPostsLabel = status?.dataset.empty ?? '';
+
+  const normalize = (value: string): string =>
+    value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+  if (cards.length > 0) {
+    const haystack = cards.map((card) => normalize(card.dataset.search ?? ''));
+    const categories = cards.map((card) => card.dataset.category ?? '');
+    let activeCategory = '';
+
+    const emptyState = document.createElement('div');
+    emptyState.className = 'blog-filter__empty';
+    emptyState.textContent = noPostsLabel;
+    emptyState.hidden = true;
+    cards[0].parentElement?.after(emptyState);
+
+    const apply = (): void => {
+      const term = normalize(input?.value.trim() ?? '');
+      let visible = 0;
+
+      cards.forEach((card, index) => {
+        const matchesTerm = term === '' || haystack[index].includes(term);
+        const matchesCategory =
+          activeCategory === '' || categories[index] === activeCategory;
+        const match = matchesTerm && matchesCategory;
+        card.hidden = !match;
+        if (match) visible += 1;
+      });
+
+      const filtering = term !== '' || activeCategory !== '';
+      if (pagination) pagination.hidden = filtering;
+      if (clearBtn) clearBtn.hidden = !filtering;
+      if (status) status.textContent = filtering ? `${visible} ${resultsLabel}` : '';
+      emptyState.hidden = visible > 0 || !filtering;
+    };
+
+    input?.addEventListener('input', apply);
+
+    clearBtn?.addEventListener('click', () => {
+      if (input) input.value = '';
+      activeCategory = '';
+      chips.forEach((chip) => {
+        chip.classList.toggle('is-active', chip.dataset.category === '');
+        chip.setAttribute('aria-pressed', String(chip.dataset.category === ''));
+      });
+      apply();
+      input?.focus();
+    });
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const next = chip.dataset.category ?? '';
+        activeCategory = activeCategory === next ? '' : next;
+        chips.forEach((other) => {
+          const isActive = (other.dataset.category ?? '') === activeCategory;
+          other.classList.toggle('is-active', isActive);
+          other.setAttribute('aria-pressed', String(isActive));
+        });
+        apply();
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const target = event.target as HTMLElement | null;
+      const typing =
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable;
+      if (event.key === '/' && !typing && input) {
+        event.preventDefault();
+        input.focus();
+      }
+    });
+
+    apply();
+  }
+</script>

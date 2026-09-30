@@ -1,0 +1,36 @@
+---
+import BlogLayout from '@layouts/BlogLayout.astro';
+import { getBlogPosts, getAllBlogCategories } from '@utils/blog';
+import type { Locale } from '@i18n';
+
+// getStaticPaths is hoisted, so it can only reference imports.
+export async function getStaticPaths() {
+  const locale: Locale = 'en';
+  const postsPerPage = 10;
+  const posts = await getBlogPosts(locale, { limit: 1000 });
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: String(i + 1) },
+    props: { page: i + 1, totalPages },
+  }));
+}
+
+const locale: Locale = 'en';
+const POSTS_PER_PAGE = 10;
+const { page, totalPages } = Astro.props;
+const posts = await getBlogPosts(locale, {
+  limit: POSTS_PER_PAGE,
+  offset: (page - 1) * POSTS_PER_PAGE,
+});
+const categories = await getAllBlogCategories(locale);
+---
+
+<BlogLayout
+  locale={locale}
+  posts={posts}
+  currentPage={page}
+  totalPages={totalPages}
+  basePath="/blog/"
+  categories={categories}
+/>

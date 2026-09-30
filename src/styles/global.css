@@ -7,16 +7,25 @@
 	--vhs-warm: #e0c28b;
 	--vhs-accent: #c7ff6b;
 	--vhs-shadow: rgba(0, 0, 0, 0.55);
+	--vhs-muted: #b8ab96;
+	--vhs-reading-bg: rgba(10, 10, 10, 0.92);
+	--vhs-font-display: "VT323", "Courier New", monospace;
+	--vhs-font-reading: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 
 * {
 	box-sizing: border-box;
 }
 
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: 80px;
+}
+
 body {
 	margin: 0;
 	padding-top: 60px;
-	font-family: "VT323", "Courier New", monospace;
+	font-family: var(--vhs-font-display);
 	background: radial-gradient(circle at 50% 10%, #1b1b1b 0%, var(--vhs-bg) 55%);
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -47,6 +56,7 @@ body::before {
 		),
 		radial-gradient(circle at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.5) 100%);
 	mix-blend-mode: screen;
+	opacity: 0.5;
 }
 
 body::after {
@@ -64,7 +74,7 @@ body::after {
 			transparent 2px,
 			transparent 3px
 		);
-	opacity: 0.9;
+	opacity: 0.5;
 }
 
 ::selection {
@@ -79,6 +89,17 @@ a {
 h1, h2, h3 {
 	text-transform: uppercase;
 	letter-spacing: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
 .vhs-title {

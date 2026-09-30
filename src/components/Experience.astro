@@ -1,0 +1,288 @@
+---
+import { getTranslationSync, type Locale } from '../i18n';
+import { getLocalizedText, type BilingualString } from '../utils/content';
+import {
+  getExperiences,
+  formatDateRange,
+  getWorkModeLabel,
+} from '../utils/experience';
+import { getTechIconUrl } from '../utils/icons';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslationSync(locale);
+const experiences = await getExperiences();
+---
+
+<ol class="experience-list">
+  {
+    experiences.map((entry) => {
+      const { data } = entry;
+      const highlights = data.highlights ?? [];
+
+      return (
+        <li class="experience-card vhs-card">
+          <span class="experience-card__marker" aria-hidden="true" />
+
+          <header class="experience-card__header">
+            <div class="experience-card__heading">
+              <h3 class="experience-card__role">
+                {getLocalizedText(data.role as BilingualString, locale)}
+              </h3>
+              <p class="experience-card__company">
+                {getLocalizedText(data.company as BilingualString, locale)}
+              </p>
+            </div>
+
+            <p class="experience-card__period">
+              <span class="experience-card__period-range">
+                {formatDateRange(data, locale, t.experience.present)}
+              </span>
+            </p>
+          </header>
+
+          <p class="experience-card__meta">
+            {getLocalizedText(data.location as BilingualString, locale)}
+            {' · '}
+            {getWorkModeLabel(data.workMode, locale)}
+          </p>
+
+          {
+            highlights.length > 0 && (
+              <ul class="experience-card__highlights">
+                {highlights.map((highlight) => (
+                  <li class="experience-card__highlight">
+                    {getLocalizedText(highlight as BilingualString, locale)}
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+
+          {
+            data.tags?.length > 0 && (
+              <div class="experience-card__stack">
+                <span class="experience-card__stack-label">
+                  {t.experience.techStack}
+                </span>
+                <ul class="tags">
+                  {data.tags.map((tag: string) => (
+                    <li class="tag">
+                      <img
+                        src={getTechIconUrl(tag)}
+                        alt={tag}
+                        class="tag-logo"
+                        loading="lazy"
+                        onerror="this.style.display='none'"
+                      />
+                      <span class="tag-name">{tag}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .experience-list {
+    list-style: none;
+    margin: 0;
+    padding: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  .experience-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: #0f0f0f;
+    border-left: 3px solid rgba(199, 255, 107, 0.55);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .experience-card:hover {
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 18px rgba(199, 255, 107, 0.25);
+    transform: translateY(-5px);
+  }
+
+  .experience-card__marker {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    width: 3px;
+    height: 2.5rem;
+    background: #c7ff6b;
+    box-shadow: 0 0 10px rgba(199, 255, 107, 0.8);
+  }
+
+  .experience-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .experience-card__heading {
+    flex: 1 1 16rem;
+    min-width: 0;
+  }
+
+  .experience-card__role {
+    margin: 0;
+    color: #f2e8d5;
+    text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 224, 170, 0.4);
+    font-size: 1.25rem;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+  }
+
+  .experience-card__company {
+    margin: 0.25rem 0 0 0;
+    color: #c7ff6b;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+  }
+
+  .experience-card__period {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 0;
+    text-align: right;
+  }
+
+  .experience-card__period-range {
+    color: #e0c28b;
+    font-size: 0.9rem;
+    text-shadow: 0 0 10px rgba(224, 194, 139, 0.5);
+    white-space: nowrap;
+  }
+
+  .experience-card__meta {
+    margin: 0.75rem 0 0 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed rgba(255, 236, 200, 0.2);
+    color: rgba(242, 232, 213, 0.75);
+    font-size: 0.85rem;
+  }
+
+  .experience-card__highlights {
+    list-style: none;
+    margin: 1rem 0 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+  }
+
+  .experience-card__highlight {
+    position: relative;
+    padding-left: 1.25rem;
+    color: #f2e8d5;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .experience-card__highlight::before {
+    content: "> ";
+    position: absolute;
+    left: 0;
+    color: #c7ff6b;
+    text-shadow: 0 0 8px rgba(199, 255, 107, 0.7);
+  }
+
+  .experience-card__stack {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 236, 200, 0.15);
+  }
+
+  .experience-card__stack-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: rgba(242, 232, 213, 0.6);
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(199, 255, 107, 0.15);
+    border: 1px solid rgba(199, 255, 107, 0.6);
+    color: #c7ff6b;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border-radius: 4px;
+  }
+
+  .tag-logo {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+  }
+
+  .tag-name {
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .experience-list {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .experience-card__period {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .experience-list {
+      gap: 1rem;
+    }
+
+    .experience-card {
+      padding: 1.25rem;
+    }
+
+    .experience-card__role {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .experience-card:hover {
+      transform: none;
+    }
+  }
+</style>

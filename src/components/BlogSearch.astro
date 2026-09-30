@@ -1,0 +1,129 @@
+---
+import { getTranslationSync, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslationSync(locale);
+---
+
+<div class="blog-search">
+  <label class="blog-search__label" for="blog-search-input">{t.blog.search}</label>
+  <div class="blog-search__field">
+    <input
+      type="search"
+      id="blog-search-input"
+      class="blog-search__input"
+      placeholder={t.blog.searchPlaceholder}
+      autocomplete="off"
+      aria-describedby="blog-search-status"
+    />
+    <button type="button" class="blog-search__clear" data-search-clear hidden>
+      {t.blog.clearSearch}
+    </button>
+  </div>
+  <p
+    class="blog-search__status"
+    id="blog-search-status"
+    role="status"
+    aria-live="polite"
+    data-label={t.blog.searchResults}
+    data-empty={t.blog.noPosts}
+  ></p>
+</div>
+
+<style>
+  .blog-search {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .blog-search__label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #c7ff6b;
+    font-family: "VT323", "Courier New", monospace;
+    white-space: nowrap;
+  }
+
+  .blog-search__field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .blog-search__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #0f0f0f;
+    border: 1px solid rgba(199, 255, 107, 0.35);
+    border-radius: 4px;
+    color: #f2e8d5;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .blog-search__input::placeholder {
+    color: rgba(224, 194, 139, 0.5);
+  }
+
+  .blog-search__input:focus {
+    outline: none;
+    border-color: #c7ff6b;
+    box-shadow: 0 0 12px rgba(199, 255, 107, 0.4);
+  }
+
+  .blog-search__input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .blog-search__clear {
+    position: absolute;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background: transparent;
+    border: 1px solid rgba(199, 255, 107, 0.5);
+    border-radius: 3px;
+    color: #c7ff6b;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .blog-search__clear:hover {
+    background: rgba(199, 255, 107, 0.15);
+  }
+
+  .blog-search__status {
+    margin: 0;
+    min-height: 1.2rem;
+    color: #e0c28b;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .blog-search {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.4rem;
+    }
+
+    .blog-search__status {
+      min-height: 0;
+    }
+  }
+</style>
+

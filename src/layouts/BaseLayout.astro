@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import { getTranslationSync, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  ogImage?: string;
+}
+
+const { locale, ogImage = '/profile.png' } = Astro.props;
+const t = getTranslationSync(locale);
+
+const siteBaseUrl = 'https://yere.my';
+const currentPath = Astro.url.pathname;
+const siteUrl = new URL(currentPath, siteBaseUrl).toString();
+
+const siteImage = '/profile.png';
+const ogLocale = locale === 'es' ? 'es_DO' : 'en_US';
+---
+
+<!DOCTYPE html>
+<html lang={locale}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{t.layout.title}</title>
+    <meta name="description" content={t.layout.description}>
+    <meta name="author" content="Yeremy Pujols">
+    <meta name="keywords" content="Yeremy Pujols, fullstack developer, portfolio, web development, Astro, JavaScript, TypeScript, frontend, backend">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b0f19">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;500;600;700&display=swap"
+    >
+
+    <link rel="icon" type="image/png" href={siteImage}>
+    <link rel="apple-touch-icon" href={siteImage}>
+    <link rel="canonical" href={siteUrl}>
+
+    <link rel="alternate" hreflang="en" href={new URL(locale === 'es' ? currentPath.replace('/es/', '/') : currentPath, siteBaseUrl).toString()} />
+    <link rel="alternate" hreflang="es" href={new URL(locale === 'en' ? `/es${currentPath}` : currentPath, siteBaseUrl).toString()} />
+    <link rel="alternate" hreflang="x-default" href={new URL(locale === 'es' ? currentPath.replace('/es/', '/') : currentPath, siteBaseUrl).toString()} />
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content={ogLocale}>
+    <meta property="og:locale:alternate" content={locale === 'en' ? 'es_DO' : 'en_US'}>
+    <meta property="og:title" content={t.layout.title}>
+    <meta property="og:description" content={t.layout.description}>
+    <meta property="og:url" content={siteUrl}>
+    <meta property="og:image" content={new URL(ogImage, siteBaseUrl).toString()}>
+    <meta property="og:site_name" content="Yeremy Pujols Portfolio">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={t.layout.title}>
+    <meta name="twitter:description" content={t.layout.description}>
+    <meta name="twitter:image" content={new URL(ogImage, siteBaseUrl).toString()}>
+</head>
+<body>
+    <Navbar locale={locale} />
+    <slot />
+    <a
+        class="floating-linktree"
+        href="https://linktree.yere.my"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t.aria.openLinktree}
+    >
+        <svg class="floating-linktree__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M9 3h6v2h2v2h2v6h-2v2h-2v2H9v-2H7v-2H5V7h2V5h2V3zm0 4h6v6H9V7zm-4 0h2v2H5V7zm0 6h2v2H5v-2zm12-6h2v2h-2V7zm0 6h2v2h-2v-2zM9 1h2v2H9V1zm4 0h2v2h-2V1zM9 21h2v2H9v-2zm4 0h2v2h-2v-2"></path>
+        </svg>
+        Linktree
+    </a>
+</body>
+</html>

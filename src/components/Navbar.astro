@@ -1,9 +1,25 @@
 ---
+import { getTranslationSync, type Locale, getOtherLocale } from '../i18n';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslationSync(locale);
+const otherLocale = getOtherLocale(locale);
+const otherUrl = getRelativeLocaleUrl(otherLocale, '/');
+
+const localeHome = getRelativeLocaleUrl(locale, '/');
+
 const navItems = [
-  { label: 'INICIO', href: '#' },
-  { label: 'PROYECTOS', href: '#projects' },
-  { label: 'CERTIFICACIONES', href: '#certifications' },
-  { label: 'CONTACTO', href: 'mailto:yeremy.pujols.f@gmail.com' },
+  { key: 'home', href: localeHome },
+  { key: 'experience', href: `${localeHome}#experience` },
+  { key: 'projects', href: `${localeHome}#projects` },
+  { key: 'certifications', href: `${localeHome}#certifications` },
+  { key: 'blog', href: getRelativeLocaleUrl(locale, '/blog/') },
+  { key: 'contact', href: 'mailto:yypujols@hotmail.com' },
 ];
 ---
 
@@ -18,17 +34,25 @@ const navItems = [
       {navItems.map((item) => (
         <li class="vhs-nav__item">
           <a href={item.href} class="vhs-nav__link">
-            <span class="vhs-nav__link-text">{item.label}</span>
-            <span class="vhs-nav__link-glitch" aria-hidden="true">{item.label}</span>
+            <span class="vhs-nav__link-text">{t.nav[item.key as keyof typeof t.nav]}</span>
+            <span class="vhs-nav__link-glitch" aria-hidden="true">{t.nav[item.key as keyof typeof t.nav]}</span>
             <span class="vhs-nav__link-indicator"></span>
           </a>
         </li>
       ))}
     </ul>
+    <a 
+      href={otherUrl} 
+      class="vhs-nav__lang-switch" 
+      aria-label={t.aria.switchLanguage}
+      title={otherLocale === 'en' ? 'English' : 'Español'}
+    >
+      {otherLocale.toUpperCase()}
+    </a>
   </div>
 </nav>
 
-<button class="vhs-nav__toggle" aria-label="Abrir menu" aria-expanded="false">
+<button class="vhs-nav__toggle" aria-label={t.aria.openMenu} aria-expanded="false">
   <span class="vhs-nav__toggle-bar"></span>
   <span class="vhs-nav__toggle-bar"></span>
   <span class="vhs-nav__toggle-bar"></span>
@@ -77,6 +101,7 @@ const navItems = [
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
   }
 
   .vhs-nav__logo {
@@ -218,6 +243,32 @@ const navItems = [
     opacity: 1;
   }
 
+  .vhs-nav__lang-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    height: 36px;
+    padding: 0 0.75rem;
+    background: transparent;
+    border: 1px solid rgba(199, 255, 107, 0.5);
+    color: #c7ff6b;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+  }
+
+  .vhs-nav__lang-switch:hover {
+    background: rgba(199, 255, 107, 0.15);
+    box-shadow: 0 0 12px rgba(199, 255, 107, 0.4);
+    border-color: #c7ff6b;
+  }
+
   @media (max-width: 768px) {
     .vhs-nav__toggle {
       display: flex;
@@ -278,6 +329,15 @@ const navItems = [
     .vhs-nav__link-glitch {
       left: 1rem;
       transform: translateY(-50%);
+    }
+
+    .vhs-nav__lang-switch {
+      position: fixed;
+      top: 0.75rem;
+      left: 1rem;
+      z-index: 1001;
+      background: rgba(5, 5, 5, 0.95);
+      border: 1px solid rgba(199, 255, 107, 0.5);
     }
 
     @keyframes glitch-text {

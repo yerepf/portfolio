@@ -1,0 +1,125 @@
+---
+import BlogCard from './BlogCard.astro';
+import { getTranslationSync, type Locale } from '../i18n';
+import type { BlogPostWithSlug } from '../utils/blog';
+
+interface Props {
+  posts: BlogPostWithSlug[];
+  locale: Locale;
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+}
+
+const { posts, locale, currentPage, totalPages, basePath } = Astro.props;
+const t = getTranslationSync(locale);
+---
+
+{posts.length > 0 && (
+  <div class="blog-list">
+    <div class="blog-list__grid">
+      {posts.map(post => (
+        <BlogCard post={post} locale={locale} />
+      ))}
+    </div>
+
+    {totalPages > 1 && (
+      <nav class="blog-list__pagination" aria-label="Pagination">
+        {currentPage > 1 && (
+          <a href={`${basePath}page/${currentPage - 1}/`} class="pagination__link pagination__link--prev">
+            ← {t.blog.olderPosts}
+          </a>
+        )}
+        
+        <span class="pagination__info">
+          {t.blog.page} {currentPage} {t.blog.of} {totalPages}
+        </span>
+        
+        {currentPage < totalPages && (
+          <a href={`${basePath}page/${currentPage + 1}/`} class="pagination__link pagination__link--next">
+            {t.blog.newerPosts} →
+          </a>
+        )}
+      </nav>
+    )}
+  </div>
+)}
+
+{posts.length === 0 && (
+  <div class="blog-list__empty">
+    <p>{t.blog.noPosts}</p>
+  </div>
+)}
+
+<style>
+  .blog-list__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .blog-list__grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-list__grid {
+      gap: 1rem;
+    }
+  }
+
+  .blog-list__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 236, 200, 0.15);
+  }
+
+  .pagination__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid rgba(199, 255, 107, 0.5);
+    color: #c7ff6b;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .pagination__link:hover {
+    background: rgba(199, 255, 107, 0.15);
+    box-shadow: 0 0 12px rgba(199, 255, 107, 0.4);
+    border-color: #c7ff6b;
+  }
+
+  .pagination__link:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .pagination__info {
+    font-family: "VT323", "Courier New", monospace;
+    color: #e0c28b;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .blog-list__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--vhs-muted);
+    font-size: 1.1rem;
+  }
+</style>

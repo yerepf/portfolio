@@ -1,22 +1,22 @@
 ---
-import type { MarkdownInstance } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getTranslationSync, type Locale } from '../i18n';
+import { getLocalizedText } from '../utils/content';
+import { getTechIconUrl } from '../utils/icons';
 
 interface Props {
   limit?: number;
+  locale: Locale;
 }
 
-const { limit } = Astro.props;
-const certifications = await Astro.glob('../content/certifications/*.md');
+const { limit, locale } = Astro.props;
+const t = getTranslationSync(locale);
+const certifications = await getCollection('certifications');
 
-const getIconUrl = (techName: string) => {
-  const iconName = techName.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '');
-  return `https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/${iconName}.svg`;
-};
-
-const sortedCertifications: MarkdownInstance<Record<string, any>>[] = certifications
+const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
   .sort((a, b) => {
-    const aDate = a.frontmatter?.date ? new Date(a.frontmatter.date as string) : null;
-    const bDate = b.frontmatter?.date ? new Date(b.frontmatter.date as string) : null;
+    const aDate = a.data.date;
+    const bDate = b.data.date;
     if (!aDate || !bDate) return 0;
     return bDate.getTime() - aDate.getTime();
   })
@@ -30,29 +30,29 @@ const sortedCertifications: MarkdownInstance<Record<string, any>>[] = certificat
         <article 
           class="certification-card vhs-card" 
           data-cert-index={index}
-          data-image={cert.frontmatter.image || ''}
-          data-link={cert.frontmatter.link || ''}
+          data-image={cert.data.image || ''}
+          data-link={cert.data.link || ''}
         >
-          {cert.frontmatter.image && (
+          {cert.data.image && (
             <div class="certification-image">
-              <img src={cert.frontmatter.image} alt={cert.frontmatter.title} />
+              <img src={cert.data.image} alt={getLocalizedText(cert.data.title, locale)} />
             </div>
           )}
           <div class="certification-content">
-            <h3>{cert.frontmatter.title}</h3>
-            <p class="issuer">{cert.frontmatter.issuer}</p>
-            {cert.frontmatter.description && (
-              <p class="description">{cert.frontmatter.description}</p>
+            <h3>{getLocalizedText(cert.data.title, locale)}</h3>
+            <p class="issuer">{cert.data.issuer}</p>
+            {cert.data.description && (
+              <p class="description">{getLocalizedText(cert.data.description, locale)}</p>
             )}
-            {cert.frontmatter.credentialId && (
-              <p class="credential-id">ID: {cert.frontmatter.credentialId}</p>
+            {cert.data.credentialId && (
+              <p class="credential-id">{t.certifications.credentialId} {cert.data.credentialId}</p>
             )}
-            {cert.frontmatter.tags && (
+            {cert.data.tags && (
               <div class="tags">
-                {cert.frontmatter.tags.map((tag: string) => (
+                {cert.data.tags.map((tag) => (
                   <span class="tag">
                     <img 
-                      src={getIconUrl(tag)} 
+                      src={getTechIconUrl(tag)} 
                       alt={tag} 
                       class="tag-logo"
                       onerror="this.style.display='none'"
@@ -71,9 +71,9 @@ const sortedCertifications: MarkdownInstance<Record<string, any>>[] = certificat
 
 <div id="cert-modal" class="modal">
   <div class="modal-content">
-    <button class="modal-close" aria-label="Cerrar">&times;</button>
-    <img id="modal-image" src="" alt="Certificación" />
-    <a id="modal-link" href="" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Ver Credencial</a>
+    <button class="modal-close" aria-label="Close">&times;</button>
+    <img id="modal-image" src="" alt="Certification" />
+    <a id="modal-link" href="" target="_blank" rel="noopener noreferrer" class="btn btn-primary">{t.certifications.viewCredential}</a>
   </div>
 </div>
 
@@ -208,8 +208,8 @@ const sortedCertifications: MarkdownInstance<Record<string, any>>[] = certificat
   }
 
   .credential-id {
-    color: #888;
-    font-size: 0.75rem;
+    color: var(--vhs-muted);
+    font-size: 1rem;
     margin: 0 0 0.75rem 0;
   }
 

@@ -1,23 +1,44 @@
 ---
-import type { MarkdownInstance } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getTranslationSync, type Locale } from '../i18n';
+import { getLocalizedText } from '../utils/content';
+import { getTechIconUrl } from '../utils/icons';
+import { getBlogPosts, normalizeRef } from '../utils/blog';
 
 interface Props {
   limit?: number;
+  locale: Locale;
 }
 
-const { limit } = Astro.props;
-const projects = await Astro.glob('../content/projects/*.md');
+const { limit, locale } = Astro.props;
+const t = getTranslationSync(locale);
+const projects = await getCollection('projects');
+const posts = await getBlogPosts(locale);
 
-// Función para obtener el logo de Simple Icons basado en el nombre
-const getIconUrl = (techName: string) => {
-  // Convertir el nombre a minúsculas y reemplazar espacios con guiones
-  const iconName = techName.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '');
-  return `https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/${iconName}.svg`;
-};
-const sortedProjects: MarkdownInstance<Record<string, any>>[] = projects
+const normalize = normalizeRef;
+
+const postsByProject = new Map<string, { slug: string; url: string; title: string }[]>();
+
+for (const post of posts) {
+  for (const ref of post.data.relatedProjects ?? []) {
+    const key = normalize(ref);
+    const matches = projects.filter(project => normalize(project.id) === key);
+    for (const match of matches) {
+      const entries = postsByProject.get(match.id) ?? [];
+      entries.push({
+        slug: post.slug,
+        url: post.url,
+        title: getLocalizedText(post.data.title, locale),
+      });
+      postsByProject.set(match.id, entries);
+    }
+  }
+}
+
+const sortedProjects: CollectionEntry<'projects'>[] = projects
   .sort((a, b) => {
-    const aDate = a.frontmatter?.date ? new Date(a.frontmatter.date as string) : null;
-    const bDate = b.frontmatter?.date ? new Date(b.frontmatter.date as string) : null;
+    const aDate = a.data.date;
+    const bDate = b.data.date;
     if (!aDate || !bDate) return 0;
     return bDate.getTime() - aDate.getTime();
   })
@@ -29,21 +50,21 @@ const sortedProjects: MarkdownInstance<Record<string, any>>[] = projects
     {
       sortedProjects.map((project) => (
         <article class="project-card vhs-card">
-          {project.frontmatter.image && (
+          {project.data.image && (
             <div class="project-image">
-              <img src={project.frontmatter.image} alt={project.frontmatter.title} />
+              <img src={project.data.image} alt={getLocalizedText(project.data.title, locale)} />
             </div>
           )}
           <div class="project-content">
-            <h3>{project.frontmatter.title}</h3>
-            <p class="description">{project.frontmatter.description}</p>
+            <h3>{getLocalizedText(project.data.title, locale)}</h3>
+            <p class="description">{getLocalizedText(project.data.description, locale)}</p>
             
-            {project.frontmatter.tags && (
+            {project.data.tags && (
               <div class="tags">
-                {project.frontmatter.tags.map((tag: string) => (
+                {project.data.tags.map((tag) => (
                   <span class="tag">
                     <img 
-                      src={getIconUrl(tag)} 
+                      src={getTechIconUrl(tag)} 
                       alt={tag} 
                       class="tag-logo"
                       onerror="this.style.display='none'"
@@ -55,13 +76,24 @@ const sortedProjects: MarkdownInstance<Record<string, any>>[] = projects
             )}
             
             <div class="project-links">
-              {project.frontmatter.link && (
-                <a href={project.frontmatter.link} class="btn btn-primary">Ver Proyecto</a>
+              {project.data.link && (
+                <a href={project.data.link} class="btn btn-primary" target="_blank" rel="noopener noreferrer">{t.projects.view}</a>
               )}
-              {project.frontmatter.github && (
-                <a href={project.frontmatter.github} class="btn btn-secondary">GitHub</a>
+              {project.data.github && (
+                <a href={project.data.github} class="btn btn-secondary" target="_blank" rel="noopener noreferrer">{t.projects.github}</a>
               )}
             </div>
+
+            {(postsByProject.get(project.id)?.length ?? 0) > 0 && (
+              <div class="project-posts">
+                {postsByProject.get(project.id)!.map(post => (
+                  <a href={post.url} class="project-post-link">
+                    <span class="project-post-link-label">{t.projects.readPost}</span>
+                    <span class="project-post-link-title">{post.title}</span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </article>
       ))
@@ -182,6 +214,52 @@ const sortedProjects: MarkdownInstance<Record<string, any>>[] = projects
   .project-links {
     display: flex;
     gap: 0.5rem;
+  }
+
+  .project-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 236, 200, 0.15);
+  }
+
+  .project-post-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.6rem 0.85rem;
+    background: rgba(199, 255, 107, 0.07);
+    border: 1px solid rgba(199, 255, 107, 0.35);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .project-post-link:hover {
+    background: rgba(199, 255, 107, 0.15);
+    border-color: #c7ff6b;
+    box-shadow: 0 0 16px rgba(199, 255, 107, 0.3);
+    transform: translateX(3px);
+  }
+
+  .project-post-link:focus-visible {
+    outline: 2px solid #c7ff6b;
+    outline-offset: 2px;
+  }
+
+  .project-post-link-label {
+    color: #c7ff6b;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .project-post-link-title {
+    color: #f2e8d5;
+    font-size: 0.9rem;
+    line-height: 1.4;
   }
 
   .btn {

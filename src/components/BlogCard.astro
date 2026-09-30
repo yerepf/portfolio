@@ -1,0 +1,218 @@
+---
+import type { BlogPostWithSlug } from '../utils/blog';
+import { getTranslationSync, getCategoryLabel, type Locale } from '../i18n';
+import { getLocalizedTitle, getLocalizedDescription, formatDate } from '../utils/blog';
+
+interface Props {
+  post: BlogPostWithSlug;
+  locale: Locale;
+}
+
+const { post, locale } = Astro.props;
+const t = getTranslationSync(locale);
+
+const title = getLocalizedTitle(post.data, locale);
+const description = getLocalizedDescription(post.data, locale);
+const formattedDate = formatDate(post.data.date, locale);
+const category = post.data.category;
+const tags = post.data.tags?.slice(0, 3) ?? [];
+const image = post.data.image;
+const searchIndex = [title, description, category ?? '', ...tags].join(' ');
+---
+
+<article class="blog-card vhs-card" data-search={searchIndex} data-category={category ?? ''}>
+  {image && (
+    <div class="blog-card__image">
+      <img src={image} alt={title} loading="lazy" />
+    </div>
+  )}
+  <div class="blog-card__content">
+    <header class="blog-card__header">
+      {category && (
+        <span class="blog-card__category">{getCategoryLabel(category, locale)}</span>
+      )}
+      <time class="blog-card__date" datetime={post.data.date.toISOString()}>
+        {formattedDate}
+      </time>
+    </header>
+    
+    <h2 class="blog-card__title">
+      <a href={post.url}>{title}</a>
+    </h2>
+    
+    <p class="blog-card__excerpt">{description}</p>
+    
+    {tags.length > 0 && (
+      <div class="blog-card__tags">
+        {tags.map(tag => (
+          <span class="tag">
+            <span class="tag-name">{tag}</span>
+          </span>
+        ))}
+      </div>
+    )}
+    
+    <footer class="blog-card__footer">
+      <span class="blog-card__read-time">
+        {post.data.readingTime ? `${post.data.readingTime} ${t.blog.readTime}` : ''}
+      </span>
+      <a href={post.url} class="blog-card__link">
+        {t.blog.readMore} →
+      </a>
+    </footer>
+  </div>
+</article>
+
+<style>
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid rgba(255, 236, 200, 0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    background: #0f0f0f;
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 18px rgba(199, 255, 107, 0.25);
+    transform: translateY(-3px);
+  }
+
+  .blog-card__image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1f1f1f 0%, #0c0c0c 100%);
+  }
+
+  .blog-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .blog-card:hover .blog-card__image img {
+    transform: scale(1.02);
+  }
+
+  .blog-card__content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-card__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-card__category {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #c7ff6b;
+    background: rgba(199, 255, 107, 0.15);
+    border: 1px solid rgba(199, 255, 107, 0.4);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+
+  .blog-card__date {
+    font-size: 1rem;
+    color: var(--vhs-muted);
+    letter-spacing: 0.5px;
+    margin-left: auto;
+  }
+
+  .blog-card__title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .blog-card__title a {
+    color: #f2e8d5;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 224, 170, 0.4);
+    transition: color 0.2s, text-shadow 0.2s;
+  }
+
+  .blog-card__title a:hover {
+    color: #c7ff6b;
+    text-shadow: 0 0 10px rgba(199, 255, 107, 0.8);
+  }
+
+  .blog-card__excerpt {
+    color: #e0c28b;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .blog-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(199, 255, 107, 0.15);
+    border: 1px solid rgba(199, 255, 107, 0.6);
+    color: #c7ff6b;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    border-radius: 4px;
+  }
+
+  .blog-card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 236, 200, 0.15);
+    margin-top: auto;
+  }
+
+  .blog-card__read-time {
+    font-size: 1rem;
+    color: var(--vhs-muted);
+    letter-spacing: 0.5px;
+  }
+
+  .blog-card__link {
+    font-size: 0.85rem;
+    color: #c7ff6b;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.2s, text-shadow 0.2s;
+  }
+
+  .blog-card__link:hover {
+    color: #e0c28b;
+    text-shadow: 0 0 10px rgba(224, 194, 139, 0.6);
+  }
+
+  @media (max-width: 768px) {
+    .blog-card__image {
+      height: 180px;
+    }
+    .blog-card__content {
+      padding: 1.25rem;
+    }
+  }
+</style>

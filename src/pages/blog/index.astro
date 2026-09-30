@@ -1,0 +1,25 @@
+---
+import BlogLayout from '@layouts/BlogLayout.astro';
+import { getBlogPosts, getAllBlogCategories } from '@utils/blog';
+import type { Locale } from '@i18n';
+
+const locale: Locale = 'en';
+const POSTS_PER_PAGE = 10;
+const page = Number(Astro.params.page ?? 1);
+
+const posts = await getBlogPosts(locale, {
+  limit: POSTS_PER_PAGE,
+  offset: (page - 1) * POSTS_PER_PAGE,
+});
+const totalPosts = (await getBlogPosts(locale, { limit: 1000 })).length;
+const categories = await getAllBlogCategories(locale);
+---
+
+<BlogLayout
+  locale={locale}
+  posts={posts}
+  currentPage={page}
+  totalPages={Math.ceil(totalPosts / POSTS_PER_PAGE)}
+  basePath="/blog/"
+  categories={categories}
+/>

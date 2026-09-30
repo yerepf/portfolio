@@ -1,109 +1,154 @@
 ---
-const {title, subtitle, image} = Astro.props;
+import { getTranslationSync, type Locale } from '../i18n';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  image: string;
+  locale: Locale;
+  ctaHref?: string;
+}
+
+const { title, subtitle, image, locale, ctaHref = '#experience' } = Astro.props;
+const t = getTranslationSync(locale);
+const heroSubtitle = subtitle ?? t.hero.subtitle;
 ---
 
 <section class="hero">
-    <div class="container">
-        <img src={image} alt="Profile Image"/>
-        <div class="text">
-            <h1>{title}</h1>
-            <h2>{subtitle}</p>
+    <div class="hero__container">
+        <img src={image} alt={t.hero.imageAlt} class="hero__image"/>
+        <div class="hero__text">
+            <p class="hero__eyebrow">{t.hero.eyebrow}</p>
+            <h1 class="hero__title">{title}</h1>
+            <p class="hero__subtitle">{heroSubtitle}</p>
         </div>
     </div>
+
+    <a href={ctaHref} class="hero__cta">
+        <span class="hero__cta-label">{t.hero.cta}</span>
+        <span class="hero__cta-arrow" aria-hidden="true"></span>
+    </a>
 </section>
 
 <style>
     .hero {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 2.5rem;
+        min-height: calc(100vh - 60px);
         padding: 3rem 2rem;
-        position: sticky;
-        top: 0;
-        height: 100vh;
-    }
-
-    @media (max-width: 1200px) {
-        .hero {
-            position: static;
-            height: auto;
-            min-height: auto;
-            padding: 2rem 1rem 1rem 1rem;
-        }
-    }
-
-    .container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 40px;
-        border-radius: 10px;
-        flex-wrap: wrap;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    img {
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .text {
         text-align: center;
     }
 
-    .text h1 {
-        margin: 0;
-        font-size: 2.5rem;
-        color: #ffffff;
+    .hero__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        max-width: 900px;
     }
 
-    .text h2 {
-        margin: 5px 0 0 0;
-        font-size: 1.5rem;
-        color: #efefef;
+    .hero__image {
+        width: clamp(150px, 22vw, 230px);
+        height: clamp(150px, 22vw, 230px);
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(199, 255, 107, 0.5);
+        box-shadow: 0 0 30px rgba(199, 255, 107, 0.25);
+    }
+
+    .hero__eyebrow {
+        margin: 0 0 0.5rem;
+        font-family: var(--vhs-font-reading);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--vhs-muted);
+    }
+
+    .hero__title {
+        margin: 0;
+        font-size: clamp(2.25rem, 6vw, 4rem);
+        line-height: 1.1;
+        color: var(--vhs-cream);
+        text-shadow: 0 2px 0 #000, 0 0 24px rgba(255, 224, 170, 0.35);
+    }
+
+    .hero__subtitle {
+        margin: 0.75rem 0 0;
+        font-family: var(--vhs-font-reading);
+        font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+        line-height: 1.5;
+        color: var(--vhs-warm);
+    }
+
+    .hero__cta {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: var(--vhs-accent);
+    }
+
+    .hero__cta-label {
+        font-family: var(--vhs-font-display);
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: 1px solid rgba(199, 255, 107, 0.5);
+        border-radius: 4px;
+        padding: 0.4rem 1.25rem;
+        background: rgba(199, 255, 107, 0.1);
+        transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+    }
+
+    .hero__cta:hover .hero__cta-label {
+        background: rgba(199, 255, 107, 0.22);
+        box-shadow: 0 0 18px rgba(199, 255, 107, 0.45);
+        color: var(--vhs-cream);
+    }
+
+    .hero__cta:focus-visible {
+        outline: 2px solid var(--vhs-accent);
+        outline-offset: 4px;
+    }
+
+    .hero__cta-arrow {
+        width: 2px;
+        height: 28px;
+        background: linear-gradient(to bottom, var(--vhs-accent), transparent);
+        animation: hero-cta-bounce 1.8s ease-in-out infinite;
+    }
+
+    @keyframes hero-cta-bounce {
+        0%, 100% { transform: translateY(0); opacity: 0.5; }
+        50% { transform: translateY(7px); opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hero__cta-arrow {
+            animation: none;
+        }
     }
 
     @media (max-width: 768px) {
-        .container {
-            flex-direction: column;
-            padding: 20px;
-            gap: 15px;
+        .hero {
+            min-height: calc(100vh - 60px);
+            padding: 2rem 1rem;
+            gap: 2rem;
         }
 
-        img {
-            width: 180px;
-            height: 180px;
-        }
-
-        .text h1 {
-            font-size: 2rem;
-        }
-
-        .text h2 {
-            font-size: 1.2rem;
+        .hero__container {
+            gap: 1.5rem;
         }
     }
 
     @media (max-width: 480px) {
-        .container {
-            padding: 15px;
-        }
-
-        img {
-            width: 150px;
-            height: 150px;
-        }
-
-        .text h1 {
-            font-size: 1.5rem;
-        }
-
-        .text h2 {
-            font-size: 1rem;
+        .hero {
+            padding: 1.5rem 1rem;
         }
     }
 </style>

@@ -1,12 +1,12 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Experience from '../components/Experience.astro';
-import Projects from '../components/Projects.astro';
-import Certifications from '../components/Certifications.astro';
-import { getTranslationSync } from '../i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import Experience from '../../components/Experience.astro';
+import Projects from '../../components/Projects.astro';
+import Certifications from '../../components/Certifications.astro';
+import { getTranslationSync } from '../../i18n';
 
-const locale = 'en';
+const locale = 'es';
 const t = getTranslationSync(locale);
 ---
 
@@ -15,7 +15,7 @@ const t = getTranslationSync(locale);
     <Hero
       image="/profile.png"
       title="Yeremy Pujols" 
-      subtitle="I'm a fullstack developer!"
+      subtitle="Soy un desarrollador fullstack!"
       locale={locale}
       ctaHref="#experience"
     />
@@ -26,11 +26,11 @@ const t = getTranslationSync(locale);
         <Experience locale={locale} />
       </section>
       <section id="projects" class="projects-section">
-        <h2>My Projects</h2>
+        <h2>Mis Proyectos</h2>
         <Projects locale={locale} />
       </section>
       <section id="certifications" class="certifications-section">
-        <h2>Certifications</h2>
+        <h2>Certificaciones</h2>
         <Certifications locale={locale} />
       </section>
     </main>
