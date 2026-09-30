@@ -1,0 +1,19 @@
+---
+import { getTechIconId } from '../utils/icons';
+
+interface Props {
+  tag: string;
+  class?: string;
+}
+
+const { tag, class: className } = Astro.props;
+const iconId = getTechIconId(tag);
+---
+
+{
+  iconId && (
+    <svg class={className} aria-hidden="true" focusable="false">
+      <use href={`/icons.svg#${iconId}`} />
+    </svg>
+  )
+}

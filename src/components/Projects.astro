@@ -2,7 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getTranslationSync, type Locale } from '../i18n';
 import { getLocalizedText } from '../utils/content';
-import { getTechIconUrl } from '../utils/icons';
+import TechIcon from './TechIcon.astro';
 import { getBlogPosts, normalizeRef } from '../utils/blog';
 
 interface Props {
@@ -68,14 +68,7 @@ const sortedProjects: CollectionEntry<'projects'>[] = projects
               <div class="tags">
                 {project.data.tags.map((tag) => (
                   <span class="tag">
-                    <img 
-                      src={getTechIconUrl(tag)} 
-                      alt={tag} 
-                      class="tag-logo"
-                      loading="lazy"
-                      decoding="async"
-                      onerror="this.style.display='none'"
-                    />
+                    <TechIcon tag={tag} class="tag-logo" />
                     <span class="tag-name">{tag}</span>
                   </span>
                 ))}
@@ -212,6 +205,8 @@ const sortedProjects: CollectionEntry<'projects'>[] = projects
     width: 1rem;
     height: 1rem;
     display: inline-block;
+    fill: currentColor;
+    flex-shrink: 0;
   }
 
   .tag-name {

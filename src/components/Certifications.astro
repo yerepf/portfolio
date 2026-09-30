@@ -2,7 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getTranslationSync, type Locale } from '../i18n';
 import { getLocalizedText } from '../utils/content';
-import { getTechIconUrl } from '../utils/icons';
+import TechIcon from './TechIcon.astro';
 
 interface Props {
   limit?: number;
@@ -56,14 +56,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
               <div class="tags">
                 {cert.data.tags.map((tag) => (
                   <span class="tag">
-                    <img 
-                      src={getTechIconUrl(tag)} 
-                      alt={tag} 
-                      class="tag-logo"
-                      loading="lazy"
-                      decoding="async"
-                      onerror="this.style.display='none'"
-                    />
+                    <TechIcon tag={tag} class="tag-logo" />
                     <span class="tag-name">{tag}</span>
                   </span>
                 ))}
@@ -244,6 +237,8 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     width: 0.9rem;
     height: 0.9rem;
     display: inline-block;
+    fill: currentColor;
+    flex-shrink: 0;
   }
 
   .tag-name {

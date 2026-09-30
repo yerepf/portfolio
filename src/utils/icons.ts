@@ -1,10 +1,44 @@
-const ICON_CDN = 'https://cdn.jsdelivr.net/npm/simple-icons@v10/icons';
+const ICON_ALIASES: Record<string, string> = {
+  'c++': 'cplusplus',
+  java: 'openjdk',
+  nextjs: 'vercel',
+  nodejs: 'nodedotjs',
+  scss: 'sass',
+  'tailwind-css': 'tailwindcss',
+  threejs: 'threedotjs',
+};
 
-export function getTechIconUrl(techName: string): string {
-  const iconName = techName
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/\./g, '');
+const ICON_SLUGS = new Set([
+  'angular',
+  'astro',
+  'axios',
+  'bootstrap',
+  'cesium',
+  'cisco',
+  'cplusplus',
+  'docker',
+  'fastapi',
+  'figma',
+  'git',
+  'javascript',
+  'kotlin',
+  'linux',
+  'mapbox',
+  'nodedotjs',
+  'openjdk',
+  'postgresql',
+  'react',
+  'sass',
+  'supabase',
+  'tailwindcss',
+  'threedotjs',
+  'typescript',
+  'vercel',
+]);
 
-  return `${ICON_CDN}/${iconName}.svg`;
+export function getTechIconId(techName: string): string | null {
+  const key = techName.toLowerCase().replace(/\s+/g, '-').replace(/\./g, '');
+  const slug = ICON_ALIASES[key] ?? key;
+
+  return ICON_SLUGS.has(slug) ? `si-${slug}` : null;
 }
