@@ -29,7 +29,20 @@ const ogLocale = locale === 'es' ? 'es_DO' : 'en_US';
     <meta name="author" content="Yeremy Pujols">
     <meta name="keywords" content="Yeremy Pujols, fullstack developer, portfolio, web development, Astro, JavaScript, TypeScript, frontend, backend">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#0b0f19">
+    <meta name="theme-color" content="#0a0a0a" data-theme-color>
+    <script is:inline>
+        (function () {
+            var stored = null;
+            try { stored = localStorage.getItem('theme'); } catch (e) {}
+            var choice = stored === 'light' || stored === 'dark' ? stored : 'system';
+            var resolved = choice === 'system'
+                ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+                : choice;
+            var root = document.documentElement;
+            root.dataset.theme = resolved;
+            root.dataset.themeChoice = choice;
+        })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

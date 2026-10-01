@@ -153,14 +153,14 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 2px solid rgba(255, 236, 200, 0.25);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--vhs-border);
+    box-shadow: 0 10px 30px var(--vhs-shadow), inset 0 0 20px color-mix(in srgb, var(--vhs-accent-tint) 5%, transparent);
     transition: all 0.3s ease;
     cursor: pointer;
   }
 
   .certification-card:hover {
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 18px rgba(199, 255, 107, 0.25);
+    box-shadow: 0 14px 40px var(--vhs-shadow-soft), 0 0 18px color-mix(in srgb, var(--vhs-accent) 25%, transparent);
     transform: translateY(-3px);
   }
 
@@ -169,7 +169,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     min-height: 160px;
     max-height: 420px;
     overflow: hidden;
-    background: linear-gradient(135deg, #1f1f1f 0%, #0c0c0c 100%);
+    background: linear-gradient(135deg, var(--vhs-surface-image-a) 0%, var(--vhs-surface-image-b) 100%);
   }
 
   .certification-image img {
@@ -182,7 +182,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
 
   .certification-content {
     padding: 1.25rem;
-    background: #0f0f0f;
+    background: var(--vhs-surface-sunken);
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -190,13 +190,13 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
 
   .certification-content h3 {
     margin: 0 0 0.25rem 0;
-    color: #f2e8d5;
-    text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 224, 170, 0.4);
+    color: var(--vhs-cream);
+    text-shadow: 0 1px 0 var(--vhs-shadow-hard), 0 0 10px var(--vhs-glow-warm);
     font-size: 1.15rem;
   }
 
   .issuer {
-    color: #c7ff6b;
+    color: var(--vhs-accent);
     font-size: 0.85rem;
     margin: 0 0 0.75rem 0;
     text-transform: uppercase;
@@ -204,7 +204,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
   }
 
   .description {
-    color: #e0c28b;
+    color: var(--vhs-warm);
     font-size: 0.875rem;
     margin-bottom: 0.75rem;
     flex: 1;
@@ -228,9 +228,9 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     align-items: center;
     gap: 0.35rem;
     padding: 0.25rem 0.6rem;
-    background: rgba(199, 255, 107, 0.15);
-    border: 1px solid rgba(199, 255, 107, 0.6);
-    color: #c7ff6b;
+    background: color-mix(in srgb, var(--vhs-accent) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--vhs-accent) 60%, transparent);
+    color: var(--vhs-accent);
     font-size: 0.7rem;
     text-transform: uppercase;
     border-radius: 4px;
@@ -247,7 +247,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: var(--vhs-scrim);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -273,7 +273,7 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
     right: 0;
     background: none;
     border: none;
-    color: #f2e8d5;
+    color: var(--vhs-cream);
     font-size: 2.5rem;
     cursor: pointer;
     line-height: 1;
@@ -281,15 +281,15 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
   }
 
   .modal-close:hover {
-    color: #c7ff6b;
+    color: var(--vhs-accent);
   }
 
   #modal-image {
     max-width: 100%;
     max-height: 70vh;
     object-fit: contain;
-    border: 2px solid rgba(255, 236, 200, 0.25);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--vhs-border);
+    box-shadow: 0 10px 40px var(--vhs-shadow-deep);
   }
 
   .btn {
@@ -305,12 +305,12 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
   }
 
   .btn-primary {
-    background: #e0c28b;
-    color: #0a0a0a;
-    box-shadow: 0 0 15px rgba(224, 194, 139, 0.6);
+    background: var(--vhs-btn-bg);
+    color: var(--vhs-btn-fg);
+    box-shadow: 0 0 15px var(--vhs-btn-glow);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 0 25px rgba(224, 194, 139, 0.9);
+    box-shadow: 0 0 25px color-mix(in srgb, var(--vhs-warm-tint) 90%, transparent);
   }
 </style>

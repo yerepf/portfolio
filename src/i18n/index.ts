@@ -69,6 +69,10 @@ export interface UITranslations {
     openMenu: string;
     openLinktree: string;
     switchLanguage: string;
+    toggleTheme: string;
+    themeLight: string;
+    themeDark: string;
+    themeSystem: string;
   };
 }
 

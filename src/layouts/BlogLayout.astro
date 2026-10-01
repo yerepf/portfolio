@@ -69,14 +69,14 @@ const t = getTranslationSync(locale);
 
   .blog-page__title {
     margin: 0 0 0.5rem 0;
-    color: #f2e8d5;
+    color: var(--vhs-cream);
     font-size: 2.5rem;
-    text-shadow: 0 1px 0 #000, 0 0 20px rgba(255, 224, 170, 0.4);
+    text-shadow: 0 1px 0 var(--vhs-shadow-hard), 0 0 20px var(--vhs-glow-warm);
   }
 
   .blog-page__subtitle {
     margin: 0;
-    color: #e0c28b;
+    color: var(--vhs-warm);
     font-size: 1.1rem;
     max-width: 600px;
     margin-left: auto;
@@ -94,16 +94,16 @@ const t = getTranslationSync(locale);
     gap: 0.6rem;
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 236, 200, 0.15);
+    border-bottom: 1px solid color-mix(in srgb, var(--vhs-accent-tint) 15%, transparent);
   }
 
   .blog-categories__chip {
     padding: 0.4rem 0.9rem;
-    border: 1px solid rgba(199, 255, 107, 0.35);
+    border: 1px solid color-mix(in srgb, var(--vhs-accent) 35%, transparent);
     border-radius: 999px;
     background: transparent;
-    color: #e0c28b;
-    font-family: "VT323", "Courier New", monospace;
+    color: var(--vhs-warm);
+    font-family: var(--vhs-font-display);
     font-size: 0.95rem;
     letter-spacing: 1px;
     text-decoration: none;
@@ -113,15 +113,15 @@ const t = getTranslationSync(locale);
   }
 
   .blog-categories__chip:hover {
-    color: #c7ff6b;
-    border-color: #c7ff6b;
-    background: rgba(199, 255, 107, 0.1);
+    color: var(--vhs-accent);
+    border-color: var(--vhs-accent);
+    background: color-mix(in srgb, var(--vhs-accent) 10%, transparent);
   }
 
   .blog-categories__chip.is-active {
-    color: #c7ff6b;
-    background: rgba(199, 255, 107, 0.15);
-    border-color: #c7ff6b;
+    color: var(--vhs-accent);
+    background: color-mix(in srgb, var(--vhs-accent) 15%, transparent);
+    border-color: var(--vhs-accent);
   }
 
   .blog-page__main {
@@ -157,7 +157,7 @@ const t = getTranslationSync(locale);
     grid-column: 1 / -1;
     padding: 3rem 1rem;
     text-align: center;
-    color: #e0c28b;
+    color: var(--vhs-warm);
     font-size: 1.1rem;
   }
 

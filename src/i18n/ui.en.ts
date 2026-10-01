@@ -64,5 +64,9 @@ export const ui = {
     openMenu: 'Open menu',
     openLinktree: "Open Yeremy Pujols' Linktree",
     switchLanguage: 'Switch language',
+    toggleTheme: 'Change theme',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSystem: 'System',
   },
 } as const;

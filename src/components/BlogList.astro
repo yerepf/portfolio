@@ -78,7 +78,7 @@ const t = getTranslationSync(locale);
     gap: 2rem;
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid rgba(255, 236, 200, 0.15);
+    border-top: 1px solid color-mix(in srgb, var(--vhs-accent-tint) 15%, transparent);
   }
 
   .pagination__link {
@@ -87,9 +87,9 @@ const t = getTranslationSync(locale);
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
     background: transparent;
-    border: 1px solid rgba(199, 255, 107, 0.5);
-    color: #c7ff6b;
-    font-family: "VT323", "Courier New", monospace;
+    border: 1px solid color-mix(in srgb, var(--vhs-accent) 50%, transparent);
+    color: var(--vhs-accent);
+    font-family: var(--vhs-font-display);
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -99,9 +99,9 @@ const t = getTranslationSync(locale);
   }
 
   .pagination__link:hover {
-    background: rgba(199, 255, 107, 0.15);
-    box-shadow: 0 0 12px rgba(199, 255, 107, 0.4);
-    border-color: #c7ff6b;
+    background: color-mix(in srgb, var(--vhs-accent) 15%, transparent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--vhs-accent) 40%, transparent);
+    border-color: var(--vhs-accent);
   }
 
   .pagination__link:disabled {
@@ -110,8 +110,8 @@ const t = getTranslationSync(locale);
   }
 
   .pagination__info {
-    font-family: "VT323", "Courier New", monospace;
-    color: #e0c28b;
+    font-family: var(--vhs-font-display);
+    color: var(--vhs-warm);
     font-size: 1rem;
     white-space: nowrap;
   }

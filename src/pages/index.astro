@@ -11,7 +11,7 @@ const t = getTranslationSync(locale);
 ---
 
 <BaseLayout locale={locale}>
-  <div class="main-layout">
+  <div class="home-layout">
     <Hero
       image="/profile.png"
       title="Yeremy Pujols" 
@@ -20,95 +20,19 @@ const t = getTranslationSync(locale);
       ctaHref="#experience"
     />
     
-    <main class="container">
-      <section id="experience" class="experience-section">
-        <h2>{t.experience.title}</h2>
+    <main class="home-container">
+      <section id="experience" class="home-section">
+        <h2 class="home-section__title">{t.experience.title}</h2>
         <Experience locale={locale} />
       </section>
-      <section id="projects" class="projects-section">
-        <h2>My Projects</h2>
+      <section id="projects" class="home-section home-section--stack-title home-section--divided">
+        <h2 class="home-section__title">My Projects</h2>
         <Projects locale={locale} />
       </section>
-      <section id="certifications" class="certifications-section">
-        <h2>Certifications</h2>
+      <section id="certifications" class="home-section home-section--divided">
+        <h2 class="home-section__title home-section__title--spaced">Certifications</h2>
         <Certifications locale={locale} />
       </section>
     </main>
   </div>
 </BaseLayout>
-
-<style>
-  .main-layout {
-    display: block;
-    min-height: 100vh;
-  }
-
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .experience-section,
-  .projects-section,
-  .certifications-section {
-    scroll-margin-top: 80px;
-  }
-
-  .experience-section h2,
-  .projects-section h2 {
-    text-align: center;
-    margin-bottom: 0rem;
-    color: #e0c28b;
-    text-shadow: 0 0 20px #e0c28b;
-    font-size: 2rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .projects-section,
-  .certifications-section {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 236, 200, 0.15);
-  }
-
-  .certifications-section h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #e0c28b;
-    text-shadow: 0 0 20px #e0c28b;
-    font-size: 2rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  @media (max-width: 768px) {
-    .container {
-      padding: 1.5rem;
-    }
-
-    .experience-section h2,
-    .projects-section h2,
-    .certifications-section h2 {
-      font-size: 1.5rem;
-    }
-  }
-
-
-  @media (max-width: 480px) {
-    .container {
-      padding: 1rem;
-    }
-
-    .experience-section h2,
-    .projects-section h2,
-    .certifications-section h2 {
-      font-size: 1.25rem;
-    }
-
-    .projects-section h2 {
-      margin-bottom: 1.5rem;
-    }
-  }
-</style>
