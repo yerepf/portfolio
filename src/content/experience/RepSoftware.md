@@ -11,6 +11,7 @@ location:
 workMode: "remote"
 startDate: 2026-01-01
 current: true
+order: 2
 summary:
   en: "I lead the technical direction, talent management, and development of my own software agency, coordinating multidisciplinary teams to deliver custom web and backend solutions."
   es: "Lidero la dirección técnica, gestión de talento y desarrollo en una agencia propia de software, coordinando equipos multidisciplinarios para entregar soluciones web y backend a medida."

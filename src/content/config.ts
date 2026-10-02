@@ -43,6 +43,7 @@ const experience = defineCollection({
     summary: bilingualString,
     highlights: z.array(bilingualString).default([]),
     tags: z.array(z.string()).default([]),
+    order: z.number().optional(),
   }),
 });
 

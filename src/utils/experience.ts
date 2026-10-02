@@ -12,9 +12,14 @@ const LOCALE_TAG: Record<Locale, string> = {
 export async function getExperiences(): Promise<ExperienceEntry[]> {
   const entries = await getCollection('experience');
 
-  return entries.sort(
-    (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
-  );
+  return entries.sort((a, b) => {
+    const aOrder = a.data.order ?? Number.MAX_SAFE_INTEGER;
+    const bOrder = b.data.order ?? Number.MAX_SAFE_INTEGER;
+
+    if (aOrder !== bOrder) return aOrder - bOrder;
+
+    return b.data.startDate.getTime() - a.data.startDate.getTime();
+  });
 }
 
 export function getWorkModeLabel(

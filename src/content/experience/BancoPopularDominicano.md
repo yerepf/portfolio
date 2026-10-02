@@ -12,6 +12,7 @@ workMode: "onsite"
 startDate: 2025-07-01
 endDate: 2025-08-01
 current: false
+order: 1
 summary:
   en: "I supported the technology enablement area by contributing to the development, UI optimization, and quality assurance of Toke's mobile application."
   es: "Colaboré en el área de habilitación tecnológica participando en el desarrollo, optimización de UI y aseguramiento de calidad de la aplicación móvil Toke."
