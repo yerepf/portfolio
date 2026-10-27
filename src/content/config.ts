@@ -22,11 +22,13 @@ const certifications = defineCollection({
     issuer: z.string(),
     description: bilingualString.optional(),
     image: z.string().optional(),
+    imageThumb: z.string().optional(),
     link: z.string().optional(),
     tags: z.array(z.string()).optional(),
     date: z.date().optional(),
     expirationDate: z.date().optional(),
     credentialId: z.string().optional(),
+    order: z.number().optional(),
   }),
 });
 

@@ -11,4 +11,5 @@ link: "https://escuela.sb.gob.do/certificates/gpcbssk6jd"
 tags: ["Fintech", "Regulation", "Digital Payments", "Open Banking", "Consumer Protection"]
 date: 2026-03-08
 credentialId: "gpcbssk6jd"
+order: 100
 ---

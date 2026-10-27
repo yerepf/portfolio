@@ -15,9 +15,14 @@ const certifications = await getCollection('certifications');
 
 const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
   .sort((a, b) => {
+    const aOrder = a.data.order ?? 0;
+    const bOrder = b.data.order ?? 0;
+    if (aOrder !== bOrder) return bOrder - aOrder;
     const aDate = a.data.date;
     const bDate = b.data.date;
-    if (!aDate || !bDate) return 0;
+    if (!aDate && !bDate) return 0;
+    if (!aDate) return 1;
+    if (!bDate) return -1;
     return bDate.getTime() - aDate.getTime();
   })
   .slice(0, limit);
@@ -26,17 +31,20 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
 <section class="certifications">
   <div class="certifications-grid">
     {
-      sortedCertifications.map((cert, index) => (
+      sortedCertifications.map((cert, index) => {
+        const fullImage = cert.data.image || '';
+        const thumbImage = cert.data.imageThumb || (fullImage ? fullImage.replace('.webp', '-thumb.webp') : '');
+        return (
         <article 
           class="certification-card vhs-card" 
           data-cert-index={index}
-          data-image={cert.data.image || ''}
+          data-image={fullImage}
           data-link={cert.data.link || ''}
         >
-          {cert.data.image && (
+          {(thumbImage || fullImage) && (
             <div class="certification-image">
               <img
-                src={cert.data.image}
+                src={thumbImage || fullImage}
                 alt={getLocalizedText(cert.data.title, locale)}
                 loading="lazy"
                 decoding="async"
@@ -64,7 +72,8 @@ const sortedCertifications: CollectionEntry<'certifications'>[] = certifications
             )}
           </div>
         </article>
-      ))
+      )
+      })
     }
   </div>
 </section>

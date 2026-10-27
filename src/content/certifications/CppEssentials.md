@@ -10,4 +10,5 @@ image: "/C++Essentials.png"
 link: "https://www.credly.com/badges/dc8239c6-fc13-4878-92ab-b460d1349e68/public_url"
 tags: ["C++", "Programming", "Cisco"]
 date: 2026-07-29
+order: 77
 ---

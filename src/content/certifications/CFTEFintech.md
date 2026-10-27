@@ -11,4 +11,5 @@ link: "https://my.cfte.education/certificates/g4boihgiwk"
 tags: ["Fintech", "Blockchain", "Open Banking", "AI", "Finance"]
 date: 2026-03-15
 credentialId: "g4boihgiwk"
+order: 78
 ---

@@ -11,4 +11,5 @@ link: "https://coursera.org/verify/3PC001ZQVV20"
 tags: ["Cybersecurity", "Risk Management", "Network Security", "Threat Detection", "Compliance"]
 date: 2026-01-17
 credentialId: "3PC001ZQVV20"
+order: 95
 ---

@@ -10,4 +10,5 @@ image: "/ITEssentials.png"
 link: "https://www.credly.com/badges/7a37d886-45c1-4518-8c1d-7a7878d731f0"
 tags: ["IT Essentials", "Hardware", "Networking", "Technical Support", "Cybersecurity"]
 date: 2026-04-20
+order: 73
 ---
