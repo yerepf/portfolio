@@ -16,7 +16,11 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
 
 <section class="hero">
     <div class="hero__container">
-        <img src={image} alt={t.hero.imageAlt} class="hero__image"/>
+        <div class="hero__image-wrapper" id="heroImageWrapper">
+            <div class="hero__image-inner" id="heroImageInner">
+                <img src={image} alt={t.hero.imageAlt} class="hero__image"/>
+            </div>
+        </div>
         <div class="hero__text">
             <p class="hero__eyebrow">{t.hero.eyebrow}</p>
             <h1 class="hero__title">{title}</h1>
@@ -28,6 +32,53 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
         <span class="hero__cta-label">{t.hero.cta}</span>
         <span class="hero__cta-arrow" aria-hidden="true"></span>
     </a>
+    <script>
+        const wrapper = document.getElementById('heroImageWrapper') as HTMLElement | null;
+        const inner = document.getElementById('heroImageInner') as HTMLElement | null;
+        
+        if (wrapper && inner && window.matchMedia('(min-width: 769px)').matches) {
+            let targetRotation = 0;
+            let currentRotation = 0;
+            let isDragging = false;
+            let lastX = 0;
+            let velocity = 0;
+            
+            wrapper.addEventListener('mousedown', (e: MouseEvent) => {
+                isDragging = true;
+                lastX = e.clientX;
+                velocity = 0;
+                wrapper.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e: MouseEvent) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - lastX;
+                velocity = deltaX * 0.5;
+                targetRotation += velocity;
+                lastX = e.clientX;
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                wrapper.style.cursor = 'grab';
+            });
+            
+            function animate() {
+                currentRotation += (targetRotation - currentRotation) * 0.1;
+                if (!isDragging) {
+                    velocity *= 0.95;
+                    targetRotation += velocity;
+                }
+                inner!.style.transform = `rotateY(${currentRotation}deg)`;
+                requestAnimationFrame(animate);
+            }
+            
+            wrapper.style.cursor = 'grab';
+            animate();
+        }
+    </script>
 </section>
 
 <style>
@@ -50,13 +101,29 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
         max-width: 900px;
     }
 
-    .hero__image {
+    .hero__image-wrapper {
+        perspective: 1000px;
         width: clamp(150px, 22vw, 230px);
         height: clamp(150px, 22vw, 230px);
+        user-select: none;
+    }
+
+    .hero__image-inner {
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: none;
+    }
+
+    .hero__image {
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid color-mix(in srgb, var(--vhs-accent) 50%, transparent);
         box-shadow: 0 0 30px color-mix(in srgb, var(--vhs-accent) 25%, transparent);
+        backface-visibility: hidden;
+        pointer-events: none;
     }
 
     .hero__eyebrow {
