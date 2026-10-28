@@ -12,13 +12,15 @@ const t = getTranslationSync(locale);
 
 <BaseLayout locale={locale}>
   <div class="home-layout">
-    <Hero
-      image="/profile.png"
-      title="Yeremy Pujols" 
-      subtitle="Soy un desarrollador fullstack!"
-      locale={locale}
-      ctaHref="#experience"
-    />
+    <section id="home">
+      <Hero
+        image="/profile.png"
+        title="Yeremy Pujols" 
+        subtitle="Soy un desarrollador fullstack!"
+        locale={locale}
+        ctaHref="#experience"
+      />
+    </section>
     
     <main class="home-container">
       <section id="experience" class="home-section">
