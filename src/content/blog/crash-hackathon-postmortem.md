@@ -76,7 +76,7 @@ content:
     - **Functional simulator** with real asteroid data
     - **Interactive 3D globe** with impact visualization
     - **Risk assessment panel** showing probability, energy, crater size
-    - **Live at**: [crashnasa.earth](https://crashnasa.earth)
+    - **Live at**: [crashnasa.vercel.app](https://crashnasa.vercel.app)
 
     ## Key Takeaways for Hackathons
 
@@ -87,7 +87,7 @@ content:
 
     ## Links
 
-    - Live: [crashnasa.earth](https://crashnasa.earth)
+    - Live: [crashnasa.vercel.app](https://crashnasa.vercel.app)
     - GitHub: [C.R.A.S.H.](https://github.com/yerepf)
   es: |
     ## El Desafío
@@ -138,7 +138,7 @@ content:
     - **Simulador funcional** con datos reales de asteroides
     - **Globo 3D interactivo** con visualización de impacto
     - **Panel de evaluación de riesgo** mostrando probabilidad, energía, tamaño de cráter
-    - **En vivo en**: [crashnasa.earth](https://crashnasa.earth)
+    - **En vivo en**: [crashnasa.vercel.app](https://crashnasa.vercel.app)
 
     ## Conclusiones Clave para Hackathons
 
@@ -149,7 +149,7 @@ content:
 
     ## Enlaces
 
-    - Demo: [crashnasa.earth](https://crashnasa.earth)
+    - Demo: [crashnasa.vercel.app](https://crashnasa.vercel.app)
     - GitHub: [C.R.A.S.H.](https://github.com/yerepf)
 image: "/CRASHReference.png"
 tags: ["React", "TypeScript", "CesiumJS", "Three.js", "FastAPI", "Python", "NASA", "Hackathon", "3D"]
