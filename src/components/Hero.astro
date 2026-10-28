@@ -18,7 +18,9 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
     <div class="hero__container">
         <div class="hero__image-wrapper" id="heroImageWrapper">
             <div class="hero__image-inner" id="heroImageInner">
-                <img src={image} alt={t.hero.imageAlt} class="hero__image"/>
+                <img src={image} alt={t.hero.imageAlt} class="hero__image hero__image--front"/>
+                <img src={image} alt={t.hero.imageAlt} class="hero__image hero__image--back"/>
+                <div class="hero__coin-edge"></div>
             </div>
         </div>
         <div class="hero__text">
@@ -42,11 +44,13 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
             let isDragging = false;
             let lastX = 0;
             let velocity = 0;
+            let autoRotate = 0.2;
             
             wrapper.addEventListener('mousedown', (e: MouseEvent) => {
                 isDragging = true;
                 lastX = e.clientX;
                 velocity = 0;
+                autoRotate = 0;
                 wrapper.style.cursor = 'grabbing';
                 e.preventDefault();
             });
@@ -54,7 +58,7 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
             document.addEventListener('mousemove', (e: MouseEvent) => {
                 if (!isDragging) return;
                 const deltaX = e.clientX - lastX;
-                velocity = deltaX * 0.5;
+                velocity = deltaX * 0.6;
                 targetRotation += velocity;
                 lastX = e.clientX;
             });
@@ -63,13 +67,20 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
                 if (!isDragging) return;
                 isDragging = false;
                 wrapper.style.cursor = 'grab';
+                setTimeout(() => {
+                    if (!isDragging) autoRotate = 0.15;
+                }, 800);
             });
             
             function animate() {
-                currentRotation += (targetRotation - currentRotation) * 0.1;
                 if (!isDragging) {
-                    velocity *= 0.95;
-                    targetRotation += velocity;
+                    velocity *= 0.98;
+                    targetRotation += velocity + autoRotate;
+                } else {
+                    currentRotation += (targetRotation - currentRotation) * 0.15;
+                }
+                if (!isDragging) {
+                    currentRotation += (targetRotation - currentRotation) * 0.05;
                 }
                 inner!.style.transform = `rotateY(${currentRotation}deg)`;
                 requestAnimationFrame(animate);
@@ -102,13 +113,14 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
     }
 
     .hero__image-wrapper {
-        perspective: 1000px;
+        perspective: 1200px;
         width: clamp(150px, 22vw, 230px);
         height: clamp(150px, 22vw, 230px);
         user-select: none;
     }
 
     .hero__image-inner {
+        position: relative;
         width: 100%;
         height: 100%;
         transform-style: preserve-3d;
@@ -116,6 +128,7 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
     }
 
     .hero__image {
+        position: absolute;
         width: 100%;
         height: 100%;
         border-radius: 50%;
@@ -123,7 +136,32 @@ const heroSubtitle = subtitle ?? t.hero.subtitle;
         border: 2px solid color-mix(in srgb, var(--vhs-accent) 50%, transparent);
         box-shadow: 0 0 30px color-mix(in srgb, var(--vhs-accent) 25%, transparent);
         backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
         pointer-events: none;
+    }
+
+    .hero__image--front {
+        transform: rotateY(0deg) translateZ(6px);
+    }
+
+    .hero__image--back {
+        transform: rotateY(180deg) translateZ(6px);
+    }
+
+    .hero__coin-edge {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: repeating-conic-gradient(
+            color-mix(in srgb, var(--vhs-accent) 40%, transparent) 0deg 2deg,
+            color-mix(in srgb, var(--vhs-cream) 30%, transparent) 2deg 4deg
+        );
+        transform: rotateY(90deg);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        pointer-events: none;
+        box-shadow: inset 0 0 10px color-mix(in srgb, var(--vhs-accent) 30%, transparent);
     }
 
     .hero__eyebrow {
